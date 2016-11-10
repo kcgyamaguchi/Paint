@@ -75,7 +75,13 @@ window.onload = function() {
 
     // フリードローイング
     gui.FreeDrawing = function () {
-        canvas.isDrawingMode = !canvas.isDrawingMode;
+        isDrawingMode: true;
+    }
+
+    // Objectdrawing
+    gui.ObjectModeDrawing = function () {
+        isDrawingMode: true;
+        canvas.freeDrawingBrush = new fabric["PencilBrush"](canvas);
     }
 
     // Canvasのクリア
@@ -300,7 +306,7 @@ window.onload = function() {
             });
     }
 
-    // メニュー
+    // フリードローイング
     {
         var f0 = gui.addFolder('Free drawing');
         f0.add(gui, "FreeDrawing");
@@ -332,19 +338,19 @@ window.onload = function() {
     // オブジェクトドローイング
     {
         var ojbdr = gui.addFolder("ObjectModeDrawing");
-        ojbdr.add(gui, "objbrushType", ["Pencil", "Circle"]).onChange(function (value) {
-            canvas.isDrawingMode = true;
-            canvas.freeDrawingBrush = new fabric[value + 'Brush'](canvas);
-        });
-
-        ojbdr.add(gui, 'Linewidth', 1, 100).onChange(function (value) {
-            canvas.freeDrawingBrush.width = value;
-        });
-
-        ojbdr.addColor(gui, "Linecolor")
-            .onChange(function (value) {
-                canvas.freeDrawingBrush.color = value;
+            ojbdr.add(gui, "ObjectModeDrawing");
+            ojbdr.add(gui, "objbrushType", ["Pencil", "Circle"]).onChange(function (value) {
+                canvas.freeDrawingBrush = new fabric[value + 'Brush'](canvas);
             });
+
+            ojbdr.add(gui, 'Linewidth', 1, 100).onChange(function (value) {
+                canvas.freeDrawingBrush.width = value;
+                });
+
+            ojbdr.addColor(gui, "Linecolor")
+                .onChange(function (value) {
+                    canvas.freeDrawingBrush.color = value;
+                });
     }
 
     // Add:Text
