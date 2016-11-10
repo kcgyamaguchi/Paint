@@ -28,6 +28,12 @@ window.onload = function() {
 
     // 初期設定
     var gui = new dat.GUI();
+
+        // Canvas
+        gui.BackgroundColor = "#FFFFFF";
+        gui.Zoomrate = 100;
+
+        // Brush
         gui.brushType = "InkBrush";
         gui.brushWidth = 30;
         gui.brushOpacity = 1;
@@ -35,29 +41,25 @@ window.onload = function() {
         gui.brushColor = "#000000";
         gui.BackgroundColor = "#FFFFFF";
 
+        // Objdrawing
         gui.objbrushType = "Pencil";
         gui.Linecolor = "#000000";
         gui.Linewidth = 1;
-
         gui.Shadowcolor = "#000000";
         gui.Shadowwidth = 1;
         gui.Shadowoffset = 1;
-        
-        gui.BackgroundColor = "#FFFFFF";
-        gui.TextColor = "#000000";
+       
+        // Text
         gui.text = "Text";
-
-        gui.GraphicColor = "#000000";
-        gui.StrokeColor = "#000000";
+        gui.TextColor = "#000000";
         gui.TextSize = 100;
 
+        // Graphic
+        gui.GraphicColor = "#000000";
+        gui.StrokeColor = "#000000";
         gui.strokeWidth = 3;
+        gui.radius = 5;
 
-        gui.Zoomrate = 100;
-
-    // カメラ倍率の初期化
-    var CameraCounter = 100;
-    
     // Brushの初期化
     setupBrush(gui.brushType, {
         width: gui.brushWidth,
@@ -80,7 +82,8 @@ window.onload = function() {
     }
 
     // Canvasを保存する
-    gui.save = function() {
+    gui.save = function () {
+        canvas.isDrawingMode = false;
         var dataURL = canvas.contextTop.canvas.toDataURL("image/png");
         window.open(dataURL);
     }
@@ -130,7 +133,7 @@ window.onload = function() {
             fill: gui.GraphicColor,
             stroke: gui.StrokeColor,
             strokeWidth: gui.strokeWidth,
-            padding: 10
+            padding: gui.radius
         }));
         canvas.off('mouse:down');
         });
@@ -145,7 +148,7 @@ window.onload = function() {
             canvas.add(new fabric.Circle({
             left: mouse_pos.x,
             top: mouse_pos.y,
-            radius: 30,
+            radius: gui.radius,
             fill: gui.GraphicColor,
             stroke: gui.StrokeColor,
             strokeWidth: gui.strokeWidth,
@@ -318,16 +321,6 @@ window.onload = function() {
                   canvas.freeDrawingBrush.inkAmount = value;
               });
 
-        // 
-        f0.addColor(gui, "BackgroundColor")
-              .onChange(function (value) {
-                  canvas.setBackgroundColor(value);
-                  canvas.renderAll();
-              });
-
-        f0.add(gui, "save");
-        f0.add(gui, "clear");
-
     // オブジェクトドローイング
     var ojbdr = gui.addFolder("ObjectModeDrawing");
         ojbdr.add(gui, "objbrushType", ["Pencil", "Circle"]).onChange(function (value) {
@@ -371,8 +364,6 @@ window.onload = function() {
             gui.StrokeColor = value;
         });
 
-        f3.add(gui, 'strokeWidth', 1, 100); // Min and max
-
-        // 
-        var customContainer = $('.moveGUI').append($(gui.domElement));
+        f3.add(gui, 'strokeWidth', 1, 100);
+        f3.add(gui, 'radius', 1, 100);
 };
