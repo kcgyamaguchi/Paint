@@ -78,9 +78,32 @@ window.onload = function() {
         isDrawingMode: true;
     }
 
+    gui.WebStorageSave = function () {
+        canvas.isDrawingMode = false;
+        if (!window.localStorage) { alert("画像保存機能はブラウザがサポートしていません。"); return; }
+        // save to localStorage
+        var json = JSON.stringify(canvas);
+        window.localStorage.setItem("hoge", json);
+    }
+
+    // 画像のロード
+    gui.WebStorageLoad = function () {
+        canvas.isDrawingMode = false;
+        if (!window.localStorage) { alert("画像保存機能はブラウザがサポートしていません。"); return; }
+        //clear canvas
+        canvas.clear();
+        //load from localStorage
+        canvas.loadFromJSON(window.localStorage.getItem("hoge"));
+        // re-render the canvas
+        canvas.renderAll();
+        // optional
+        canvas.calcOffset();
+    }
+
     // Objectdrawing
     gui.ObjectModeDrawing = function () {
-        isDrawingMode: true;
+        canvas.isDrawingMode = false;
+        canvas.isDrawingMode = true;
         canvas.freeDrawingBrush = new fabric["PencilBrush"](canvas);
     }
 
@@ -284,6 +307,8 @@ window.onload = function() {
     {
         var file = gui.addFolder("File");
         file.add(gui, "Clear");
+        file.add(gui, "WebStorageSave");
+        file.add(gui, "WebStorageLoad");
         file.add(gui, "Save");
     }
 
